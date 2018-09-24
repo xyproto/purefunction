@@ -16,6 +16,17 @@ func mul(x, y int) int {
 	return s
 }
 
+// a pure function, does not deal with global variables, calls only pure functions (if any)
+func mul3(a int, b, c float64) float64 {
+	return float64(a) * b * c
+}
+
+type HappyInt int
+
+func add2(a, b HappyInt) HappyInt {
+	return a + b
+}
+
 // not a pure function, calls a function that is not known to be pure: fmt.Println
 func main() {
 	fmt.Println(add(1, 2))
