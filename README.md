@@ -1,8 +1,11 @@
-# purefunction
+# purefunction [![Build Status](https://travis-ci.org/xyproto/purefunction.svg?branch=master)](https://travis-ci.org/xyproto/purefunction) [![GoDoc](https://godoc.org/github.com/xyproto/purefunction?status.svg)](http://godoc.org/github.com/xyproto/purefunction) [![License](http://img.shields.io/badge/license-MIT-red.svg?style=flat)](https://raw.githubusercontent.com/xyproto/purefunction/master/LICENSE) [![Report Card](https://img.shields.io/badge/go_report-A+-brightgreen.svg?style=flat)](http://goreportcard.com/report/xyproto/purefunction)
+
 
 Given a Go source file, find the names of all functions that are known to be pure.
 
 Pure functions, like the `fibonacci` function, has great potential for optimization by memoization.
+
+Uses [`go/ast`](http://golang.org/pkg/go/ast) extensively.
 
 A "pure function" for this module is, a function that:
 
