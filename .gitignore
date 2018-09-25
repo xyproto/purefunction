@@ -1,6 +1,6 @@
-purefunction
-data/data
+test/test
+*.bak
 *.swp
 *.tmp
-*~
 *.log
+*~

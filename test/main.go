@@ -45,6 +45,13 @@ func add4(a int) int {
 	return retval
 }
 
+type UnhappyInt *uint8
+
+// not pure, uses *uint8
+func add5(a UnhappyInt) HappyInt {
+	return HappyInt(*a) + 2
+}
+
 // not pure, calls nonpure functions: fmt.Println, add3, add4
 func main() {
 	fmt.Println(add(1, 2))
@@ -55,5 +62,7 @@ func main() {
 	y := []int{4}
 	fmt.Println(add3(2, &x, y))
 	fmt.Println(add4(7))
-	fmt.Println(add4(7))
+	fmt.Println(add4(7)) // add4 uses a global variable, calling it twice is on purpose
+	z := uint8(40)
+	fmt.Println(add5(&z))
 }
