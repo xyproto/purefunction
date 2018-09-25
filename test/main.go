@@ -21,6 +21,7 @@ func mul3(a int, b, c float64) float64 {
 	return float64(a) * b * c
 }
 
+// HappyInt is a basic type
 type HappyInt int
 
 // pure, uses a custom type that is a basic type
@@ -36,7 +37,7 @@ func add3(a int, b *int, c []int) int {
 	return a + *b + c[0]
 }
 
-var globalInt int = 42
+var globalInt = 42
 
 // not pure, uses a global variable
 func add4(a int) int {
@@ -45,6 +46,7 @@ func add4(a int) int {
 	return retval
 }
 
+// UnhappyInt is a pointer to a basic type
 type UnhappyInt *uint8
 
 // not pure, uses *uint8
