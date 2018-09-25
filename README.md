@@ -17,8 +17,10 @@ A "pure function" for this module is, a function that:
 
 Example of a pure function:
 
-    func add(a, b int) int {
-        return a + b
-    }
+```go
+func add(a, b int) int {
+    return a + b
+}
+```
 
 Functions are filtered out if they have non-pure indicators. The ones that are left are considered pure. There may be false negatives, but not false positives.
