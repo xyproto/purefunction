@@ -1,4 +1,4 @@
-package main
+package purefunction
 
 import (
 	"fmt"
@@ -208,13 +208,17 @@ func PureFunctions(filename string, verbose bool) []string {
 			}
 			ident, ok := arg.Type.(*ast.Ident)
 			if !ok {
-				fmt.Printf("%v contains a non-pure type: %T\n", argNames, arg.Type)
+				if verbose {
+					fmt.Printf("%v contains a non-pure type: %T\n", argNames, arg.Type)
+				}
 				pure[functionName] = false
 				break
 			}
 			typeName := ident.Name
 			if !has(basicTypes, typeName) {
-				fmt.Println(typeName + ": impure")
+				if verbose {
+					fmt.Println(typeName + ": impure")
+				}
 				pure[functionName] = false
 				break
 			}
@@ -263,7 +267,9 @@ func PureFunctions(filename string, verbose bool) []string {
 			}
 		}
 
-		fmt.Println("The "+functionName+" function is pure:", pure[functionName])
+		if verbose {
+			fmt.Println("The "+functionName+" function is pure:", pure[functionName])
+		}
 	}
 
 	pureFunctionNames := []string{}
@@ -273,13 +279,4 @@ func PureFunctions(filename string, verbose bool) []string {
 		}
 	}
 	return pureFunctionNames
-}
-
-func main() {
-	filename := "data/main.go"
-	pureFunctions := PureFunctions(filename, true)
-	fmt.Printf("Pure functions in %s:\n", filename)
-	for _, name := range pureFunctions {
-		fmt.Println("\t" + name)
-	}
 }
