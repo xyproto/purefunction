@@ -7,7 +7,7 @@ import (
 
 func ExamplePureFunctions() {
 	filename := "test/main.go"
-	pureFunctions := PureFunctions(filename, false)
+	pureFunctions := PureFunctions(filename)
 	fmt.Printf("Pure functions in %s:\n", filename)
 	sort.Strings(pureFunctions)
 	for _, name := range pureFunctions {

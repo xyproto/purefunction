@@ -30,6 +30,9 @@ var basicTypes = []string{
 	"complex128",
 }
 
+// Verbose can be set to true for output to stdout while processing source files
+var Verbose bool
+
 // Check if a given slice of strings has the given element
 func has(sl []string, e string) bool {
 	for _, s := range sl {
@@ -40,7 +43,7 @@ func has(sl []string, e string) bool {
 	return false
 }
 
-type FuncBodyVisitor struct {
+type funcBodyVisitor struct {
 	pure         map[string]bool // for keeping the purity status of all known functions
 	functionName string          // for the name of the function that is to be examined
 	idents       []string        // for gathering all identifiers used in a function
@@ -48,12 +51,12 @@ type FuncBodyVisitor struct {
 	verbose      bool
 }
 
-func NewFuncBodyVisitor(pureMap map[string]bool, functionName string, created *[]string, verbose bool) *FuncBodyVisitor {
+func newFuncBodyVisitor(pureMap map[string]bool, functionName string, created *[]string, verbose bool) *funcBodyVisitor {
 	idents := []string{}
-	return &FuncBodyVisitor{pureMap, functionName, idents, created, verbose}
+	return &funcBodyVisitor{pureMap, functionName, idents, created, verbose}
 }
 
-func (v *FuncBodyVisitor) Visit(node ast.Node) (w ast.Visitor) {
+func (v *funcBodyVisitor) Visit(node ast.Node) (w ast.Visitor) {
 	if node == nil {
 		return nil
 	}
@@ -99,8 +102,10 @@ func (v *FuncBodyVisitor) Visit(node ast.Node) (w ast.Visitor) {
 	return v
 }
 
-// PureFunctions returns a slice of the names of the functions that are considered pure
-func PureFunctions(filename string, verbose bool) []string {
+// PureFunctions returns a slice with the function names that are considered pure
+func PureFunctions(filename string) []string {
+	verbose := Verbose
+
 	fset := token.NewFileSet()
 
 	// parser.Trace and ParseComments is also possible flags
@@ -197,7 +202,7 @@ func PureFunctions(filename string, verbose bool) []string {
 				if !pure[functionName] {
 					break
 				}
-				v := NewFuncBodyVisitor(pure, functionName, &created, verbose)
+				v := newFuncBodyVisitor(pure, functionName, &created, verbose)
 				ast.Walk(v, stmt)
 				for _, name := range v.idents {
 					if !has(argNames, name) && !has(basicTypes, name) && !has(created, name) {
