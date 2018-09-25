@@ -59,11 +59,8 @@ func (v *FuncBodyVisitor) Visit(node ast.Node) (w ast.Visitor) {
 	}
 	switch t := node.(type) {
 	case *ast.Ident:
-		//fmt.Println("IDENT", t)
-		// Gather all IDENTS in a slice
 		v.idents = append(v.idents, fmt.Sprintf("%s", t))
 	case *ast.CallExpr:
-		//fmt.Println("case *ast.CallExpr")
 		if fun, ok := t.Fun.(*ast.SelectorExpr); ok {
 			fName := fun.Sel.Name
 			if ok, isPure := v.pure[fName]; ok && isPure {
@@ -90,52 +87,14 @@ func (v *FuncBodyVisitor) Visit(node ast.Node) (w ast.Visitor) {
 					}
 					v.pure[v.functionName] = false
 					return nil
-				} else {
-					//if v.verbose {
-					//	fmt.Println("casting to " + fName + " is fine")
-					//}
 				}
 			}
 		}
 	case *ast.AssignStmt:
 		// Gather the new identifiers
 		for _, newThing := range t.Lhs {
-			//fmt.Println("CREATED " + fmt.Sprintf("%s", newThing))
 			*v.created = append(*v.created, fmt.Sprintf("%s", newThing))
 		}
-	//case *ast.SelectorExpr:
-	//	fmt.Println("case *ast.SelectorExpr")
-	//	fName := t.Sel.Name
-	//	if ok, isPure := v.pure[fName]; ok && isPure {
-	//		fmt.Println(v.functionName + " is calling an unproblematic function: " + fName)
-	//	} else {
-	//		fmt.Println(v.functionName + " is calling a function that might be unpure: " + fName)
-	//		v.pure[v.functionName] = false
-	//		return nil
-	//	}
-	//case *ast.ReturnStmt:
-	//	fmt.Println("case *ast.ReturnStmt")
-	//case *ast.FuncDecl:
-	//fmt.Println("case *ast.FuncDecl")
-	//case *ast.ExprStmt:
-	//	fmt.Println("case *ast.ExprStmt")
-	//	if call, ok := t.X.(*ast.CallExpr); ok {
-	//		if fun, ok := call.Fun.(*ast.SelectorExpr); ok {
-	//			fName := fun.Sel.Name
-	//			if ok, isPure := v.pure[fName]; ok && isPure {
-	//				fmt.Println(v.functionName + " is calling an unproblematic function: " + fName)
-	//			} else {
-	//				fmt.Println(v.functionName + " is calling a function that might be unpure: " + fName)
-	//				v.pure[v.functionName] = false
-	//				return nil
-	//			}
-	//		}
-	//	} else {
-	//		fmt.Println("UNHANDLED EXPRESSION STATEMENT", t)
-	//		//return nil
-	//	}
-	default:
-		//fmt.Printf("ignored: %T\n", node)
 	}
 	return v
 }
@@ -226,11 +185,6 @@ func PureFunctions(filename string, verbose bool) []string {
 				fmt.Printf("pure type: %s\n", arg.Type)
 			}
 		}
-		//fmt.Printf("arg names: %v\n", argNames)
-
-		//if verbose {
-		//	fmt.Println("The "+functionName+" signature is pure:", pure[functionName])
-		//}
 
 		if pure[functionName] {
 
@@ -245,14 +199,9 @@ func PureFunctions(filename string, verbose bool) []string {
 				}
 				v := NewFuncBodyVisitor(pure, functionName, &created, verbose)
 				ast.Walk(v, stmt)
-				//fmt.Println(functionName + " identifiers: ")
 				for _, name := range v.idents {
 					if !has(argNames, name) && !has(basicTypes, name) && !has(created, name) {
-						if ok, isPure := pure[name]; ok && isPure {
-							//if v.verbose {
-							//	fmt.Println("Calling the pure function " + name + " is fine.")
-							//}
-						} else {
+						if ok, isPure := pure[name]; !ok || !isPure {
 							if v.verbose {
 								fmt.Println("not pure: " + name)
 							}
