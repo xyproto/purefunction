@@ -5,7 +5,6 @@ import (
 	"go/ast"
 	"go/parser"
 	"go/token"
-	"log"
 )
 
 var basicTypes = []string{
@@ -103,7 +102,7 @@ func (v *funcBodyVisitor) Visit(node ast.Node) (w ast.Visitor) {
 }
 
 // PureFunctions returns a slice with the function names that are considered pure
-func PureFunctions(filename string) []string {
+func PureFunctions(filename string) ([]string, error) {
 	verbose := Verbose
 
 	fset := token.NewFileSet()
@@ -111,7 +110,7 @@ func PureFunctions(filename string) []string {
 	// parser.Trace and ParseComments is also possible flags
 	node, err := parser.ParseFile(fset, filename, nil, 0)
 	if err != nil {
-		log.Fatalln(err)
+		return []string{}, err
 	}
 
 	// First gather all defined types
@@ -232,5 +231,10 @@ func PureFunctions(filename string) []string {
 			pureFunctionNames = append(pureFunctionNames, name)
 		}
 	}
-	return pureFunctionNames
+	return pureFunctionNames, nil
+}
+
+// SetVerbose can be used for enabling or disabling verbose output to stdout
+func SetVerbose(verbose bool) {
+	Verbose = verbose
 }

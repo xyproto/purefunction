@@ -3,11 +3,15 @@ package purefunction
 import (
 	"fmt"
 	"sort"
+	"log"
 )
 
 func ExamplePureFunctions() {
 	filename := "test/main.go"
-	pureFunctions := PureFunctions(filename)
+	pureFunctions, err := PureFunctions(filename)
+	if err != nil {
+		log.Fatalln(err)
+	}
 	fmt.Printf("Pure functions in %s:\n", filename)
 	sort.Strings(pureFunctions)
 	for _, name := range pureFunctions {

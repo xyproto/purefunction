@@ -24,3 +24,10 @@ func add(a, b int) int {
 ```
 
 Functions are filtered out if they have non-pure indicators. The ones that are left are considered pure. There may be false negatives, but not false positives.
+
+### General info
+
+* Version: 1.0.0
+* License: MIT
+* Author: Alexander F. Rødseth &lt;xyproto@archlinux.org&gt;
+
