@@ -2,8 +2,8 @@ package purefunction
 
 import (
 	"fmt"
-	"sort"
 	"log"
+	"sort"
 )
 
 func ExamplePureFunctions() {
