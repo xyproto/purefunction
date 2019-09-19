@@ -4,3 +4,4 @@ test/test
 *.tmp
 *.log
 *~
+cmd/pure/pure
