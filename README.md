@@ -3,6 +3,8 @@
 
 Given a Go source file, find the names of all functions that are known to be pure.
 
+Requires Go 1.10 or later.
+
 Pure functions, like the `fibonacci` function, has great potential for optimization by memoization.
 
 Uses [`go/ast`](http://golang.org/pkg/go/ast) extensively.
