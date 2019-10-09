@@ -25,6 +25,14 @@ func add(a, b int) int {
 }
 ```
 
+Another example of a pure function (even though it is a "method"):
+
+```go
+func (c *Config) Add(a, b int) int {
+    return a + b
+}
+```
+
 Functions are filtered out if they have non-pure indicators. The ones that are left are considered pure. There may be false negatives, but not false positives.
 
 ### General info
