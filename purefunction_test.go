@@ -7,7 +7,7 @@ import (
 )
 
 func ExamplePureFunctions() {
-	filename := "test/main.go"
+	filename := "testdata/main.go"
 	pureFunctions, err := PureFunctions(filename)
 	if err != nil {
 		log.Fatalln(err)
@@ -17,7 +17,7 @@ func ExamplePureFunctions() {
 	for _, name := range pureFunctions {
 		fmt.Println(name)
 	}
-	// Output: Pure functions in test/main.go:
+	// Output: Pure functions in testdata/main.go:
 	// add
 	// add2
 	// mul

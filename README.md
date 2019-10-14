@@ -4,6 +4,19 @@ Given a Go source file, find the names of all functions that are known to be pur
 
 Pure functions, like the `fibonacci` function, has great potential for optimization by memoization.
 
+
+Benchmark output for "fibonacci" vs "memoized fibonacci":
+
+```
+goos: linux
+goarch: amd64
+pkg: github.com/xyproto/purefunction/example
+BenchmarkFib10-8                   30586             38894 ns/op
+BenchmarkFibMemoized-8          84117813                14.2 ns/op
+PASS
+ok      github.com/xyproto/purefunction/example 2.798s
+```
+
 A "pure function" for this module is, a function that:
 
 * Only calls functions that are known to be pure, if any.
