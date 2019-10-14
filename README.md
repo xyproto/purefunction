@@ -53,6 +53,8 @@ PASS
 ok      github.com/xyproto/purefunction/example 2.798s
 ```
 
+See issue #1.
+
 ### Requirements
 
 * Go 1.10 or later.
