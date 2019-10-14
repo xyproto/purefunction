@@ -2,21 +2,6 @@
 
 Given a Go source file, find the names of all functions that are known to be pure.
 
-Pure functions, like the `fibonacci` function, has great potential for optimization by memoization.
-
-
-Benchmark output for "fibonacci" vs "memoized fibonacci":
-
-```
-goos: linux
-goarch: amd64
-pkg: github.com/xyproto/purefunction/example
-BenchmarkFib10-8                   30586             38894 ns/op
-BenchmarkFibMemoized-8          84117813                14.2 ns/op
-PASS
-ok      github.com/xyproto/purefunction/example 2.798s
-```
-
 A "pure function" for this module is, a function that:
 
 * Only calls functions that are known to be pure, if any.
@@ -25,6 +10,7 @@ A "pure function" for this module is, a function that:
 * Does not read or write to any memory location using pointers.
 * Ideally: Always returns the same answer, given the same input, but this is hard to test for (ref. halting problem).
 
+### Examples of pure functions
 
 Example of a pure function:
 
@@ -42,11 +28,34 @@ func (c *Config) Add(a, b int) int {
 }
 ```
 
-Functions are filtered out if they have non-pure indicators. The ones that are left are considered pure. There may be false negatives, but not false positives.
+### Features and limitations
 
-Requires Go 1.10 or later.
+* Functions are filtered out if they have non-pure indicators. The ones that are left are considered pure.
+* Functions that read from a file, read from the keyboard, uses randomness or the system time are not pure, but may be detected as such.
 
-Uses [`go/ast`](http://golang.org/pkg/go/ast) extensively.
+### Approach
+
+* Uses [`go/ast`](http://golang.org/pkg/go/ast) extensively.
+
+### Memoization
+
+Pure functions, like the `fibonacci` function, has great potential for optimization by memoization.
+
+Benchmark output for "fibonacci" vs "memoized fibonacci":
+
+```
+goos: linux
+goarch: amd64
+pkg: github.com/xyproto/purefunction/example
+BenchmarkFib10-8                   30586             38894 ns/op
+BenchmarkFibMemoized-8          84117813                14.2 ns/op
+PASS
+ok      github.com/xyproto/purefunction/example 2.798s
+```
+
+### Requirements
+
+* Go 1.10 or later.
 
 ### General info
 
