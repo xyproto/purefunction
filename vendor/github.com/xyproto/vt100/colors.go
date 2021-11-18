@@ -1,12 +1,14 @@
 package vt100
 
 import (
-	"bytes"
 	"fmt"
 	"image/color"
 	"os"
 	"strconv"
 	"strings"
+	"sync"
+
+	"github.com/xyproto/benchmarked"
 )
 
 // Color aliases, for ease of use, not for performance
@@ -38,14 +40,14 @@ var (
 	LightGray = NewAttributeColor("White")
 
 	// Light foreground colors (+ dark gray)
-	DarkGray     = NewAttributeColor("Bright", "Black")
-	LightRed     = NewAttributeColor("Bright", "Red")
-	LightGreen   = NewAttributeColor("Bright", "Green")
-	LightYellow  = NewAttributeColor("Bright", "Yellow")
-	LightBlue    = NewAttributeColor("Bright", "Blue")
-	LightMagenta = NewAttributeColor("Bright", "Magenta")
-	LightCyan    = NewAttributeColor("Bright", "Cyan")
-	White        = NewAttributeColor("Bright", "White")
+	DarkGray     = NewAttributeColor("90")
+	LightRed     = NewAttributeColor("91")
+	LightGreen   = NewAttributeColor("92")
+	LightYellow  = NewAttributeColor("93")
+	LightBlue    = NewAttributeColor("94")
+	LightMagenta = NewAttributeColor("95")
+	LightCyan    = NewAttributeColor("96")
+	White        = NewAttributeColor("97")
 
 	// Aliases
 	Pink = LightMagenta
@@ -67,6 +69,7 @@ var (
 
 	// Default colors (usually gray)
 	Default           = NewAttributeColor("39")
+	DefaultBackground = NewAttributeColor("49")
 	BackgroundDefault = NewAttributeColor("49")
 
 	// Lookup tables
@@ -88,8 +91,10 @@ var (
 		"Cyan":         Cyan,
 		"gray":         DarkGray,
 		"Gray":         DarkGray,
-		"white":        White,
-		"White":        White,
+		"white":        LightGray,
+		"White":        LightGray,
+		"lightwhite":   White,
+		"LightWhite":   White,
 		"darkred":      Red,
 		"DarkRed":      Red,
 		"darkgreen":    Green,
@@ -139,6 +144,8 @@ var (
 		"Gray":         LightGray,
 		"white":        White,
 		"White":        White,
+		"lightwhite":   White,
+		"LightWhite":   White,
 		"lightred":     LightRed,
 		"LightRed":     LightRed,
 		"lightgreen":   LightGreen,
@@ -211,35 +218,8 @@ func s2b(attribute string) byte {
 	return byte(num)
 }
 
-// For each element in a slice, apply the function f
-func mapSB(sl []string, f func(string) byte) []byte {
-	result := make([]byte, len(sl))
-	for i, s := range sl {
-		result[i] = f(s)
-	}
-	return result
-}
-
 func NewAttributeColor(attributes ...string) AttributeColor {
 	return AttributeColor(mapSB(attributes, s2b))
-}
-
-// For each element in a slice, apply the function f
-func mapS(sl []string, f func(string) string) []string {
-	result := make([]string, len(sl))
-	for i, s := range sl {
-		result[i] = f(s)
-	}
-	return result
-}
-
-// For each element in a slice, apply the function f
-func mapBS(bl []byte, f func(byte) string) []string {
-	result := make([]string, len(bl))
-	for i, b := range bl {
-		result[i] = f(b)
-	}
-	return result
 }
 
 func (ac AttributeColor) Head() byte {
@@ -279,11 +259,34 @@ func b2s(b byte) string {
 	return strconv.Itoa(int(b))
 }
 
+var (
+	scache = make(map[string]string)
+	smut   = &sync.RWMutex{}
+)
+
 // Return the VT100 terminal codes for setting this combination of attributes and color attributes
 func (ac AttributeColor) String() string {
+	id := string(ac)
+
+	smut.RLock()
+	if s, has := scache[id]; has {
+		smut.RUnlock()
+		return s
+	}
+	smut.RUnlock()
+
 	attributeString := strings.Join(mapBS(ac, b2s), ";")
 	// Replace '{attr1};...;{attrn}' with the generated attribute string and return
-	return get(specVT100, "Set Attribute Mode", map[string]string{"{attr1};...;{attrn}": attributeString})
+	s := get(specVT100, "Set Attribute Mode", map[string]string{"{attr1};...;{attrn}": attributeString})
+
+	// Store the value in the cache
+	if len(s) > 0 {
+		smut.Lock()
+		scache[id] = s
+		smut.Unlock()
+	}
+
+	return s
 }
 
 // Get the full string needed for outputting colored texti, with the text and stopping the color attribute
@@ -322,21 +325,19 @@ func (ac AttributeColor) Error(text string) {
 }
 
 func (ac AttributeColor) Combine(other AttributeColor) AttributeColor {
-	// Set an initial size of the map, where keys are attributes and values are bool
-	amap := make(map[byte]bool, len(ac)+len(other))
-	for _, attr := range ac {
-		amap[attr] = true
+	for _, a1 := range ac {
+		a2has := false
+		for _, a2 := range other {
+			if a1 == a2 {
+				a2has = true
+				break
+			}
+		}
+		if !a2has {
+			other = append(other, a1)
+		}
 	}
-	for _, attr := range other {
-		amap[attr] = true
-	}
-	newAttributes := make(AttributeColor, len(amap))
-	index := 0
-	for attr, _ := range amap {
-		newAttributes[index] = attr
-		index++
-	}
-	return AttributeColor(newAttributes)
+	return AttributeColor(other)
 }
 
 // Return a new AttributeColor that has "Bright" added to the list of attributes
@@ -373,6 +374,7 @@ func TrueColor(fg color.Color, text string) string {
 }
 
 // Equal checks if two colors have the same attributes, in the same order.
-func (ac AttributeColor) Equal(other AttributeColor) bool {
-	return bytes.Equal(ac, other)
+// The values that are being compared must have at least 1 byte in them.
+func (ac *AttributeColor) Equal(other AttributeColor) bool {
+	return benchmarked.Equal(*ac, other)
 }

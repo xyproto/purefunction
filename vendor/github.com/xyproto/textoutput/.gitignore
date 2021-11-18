@@ -12,3 +12,5 @@
 *.out
 
 cmd/simple/simple
+cmd/extract/extract
+cmd/print/print
