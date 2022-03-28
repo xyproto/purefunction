@@ -1,4 +1,4 @@
-# purefunction [![GoDoc](https://godoc.org/github.com/xyproto/purefunction?status.svg)](http://godoc.org/github.com/xyproto/purefunction) [![License](http://img.shields.io/badge/license-MIT-red.svg?style=flat)](https://raw.githubusercontent.com/xyproto/purefunction/master/LICENSE) [![Go Report Card](https://goreportcard.com/badge/github.com/xyproto/purefunction)](https://goreportcard.com/report/github.com/xyproto/purefunction)
+# purefunction [![GoDoc](https://godoc.org/github.com/xyproto/purefunction?status.svg)](http://godoc.org/github.com/xyproto/purefunction) [![License](http://img.shields.io/badge/license-BSD-green.svg?style=flat)](https://raw.githubusercontent.com/xyproto/purefunction/master/LICENSE) [![Go Report Card](https://goreportcard.com/badge/github.com/xyproto/purefunction)](https://goreportcard.com/report/github.com/xyproto/purefunction)
 
 Given a Go source file, find the names of all functions that are known to be pure.
 
@@ -62,5 +62,5 @@ See issue #1.
 ### General info
 
 * Version: 1.0.0
-* License: MIT
+* License: BSD-3
 * Author: Alexander F. Rødseth &lt;xyproto@archlinux.org&gt;
