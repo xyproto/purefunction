@@ -61,7 +61,7 @@ func (v *funcBodyVisitor) Visit(node ast.Node) (w ast.Visitor) {
 	}
 	switch t := node.(type) {
 	case *ast.Ident:
-		v.idents = append(v.idents, fmt.Sprintf("%s", t))
+		v.idents = append(v.idents, t.String())
 	case *ast.CallExpr:
 		if fun, ok := t.Fun.(*ast.SelectorExpr); ok {
 			fName := fun.Sel.Name
@@ -133,8 +133,7 @@ func PureFunctions(filename string) ([]string, error) {
 			name := ts.Name // Ident
 			typ := ts.Type
 
-			// TODO: Find a smoother way to convert to string
-			nameString := fmt.Sprintf("%s", name)
+			nameString := name.String()
 			typeString := fmt.Sprintf("%s", typ)
 
 			// Collect all type aliases for basic types into the basicTypes slice

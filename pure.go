@@ -51,8 +51,8 @@ func Pure(funcDecl *ast.FuncDecl, existingPureFuncDecls ...*ast.FuncDecl) bool {
 	return pure
 }
 
-// PureFunctionDecls returns the pure *ast.FuncDecl functions from the given source file
-func PureFunctionDecls(filename string) ([]*ast.FuncDecl, error) {
+// FunctionDecls returns the pure *ast.FuncDecl functions from the given source file
+func FunctionDecls(filename string) ([]*ast.FuncDecl, error) {
 	file, err := os.Open(filename)
 	if err != nil {
 		return []*ast.FuncDecl{}, fmt.Errorf("failed to open file: %v", err)
