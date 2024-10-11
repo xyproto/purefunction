@@ -61,6 +61,6 @@ See issue #1.
 
 ### General info
 
-* Version: 1.0.2
+* Version: 1.0.3
 * License: BSD-3
 * Author: Alexander F. Rødseth &lt;xyproto@archlinux.org&gt;
