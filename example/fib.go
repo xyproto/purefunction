@@ -1,5 +1,7 @@
 package fib
 
+import "sync"
+
 // --- not memoizied ---
 
 func Fib(n int) int {
@@ -11,21 +13,16 @@ func Fib(n int) int {
 
 // --- memoizied ---
 
-type fibType map[int]int
-
-var fibCache fibType
+var fibCache sync.Map
 
 func FibMemoized(n int) int {
-	if fibCache == nil {
-		fibCache = make(fibType)
-	}
-	if result, ok := fibCache[n]; ok {
-		return result
-	}
 	if n <= 1 {
-		fibCache[n] = 1
-		return fibCache[n]
+		return 1
 	}
-	fibCache[n] = FibMemoized(n-1) + FibMemoized(n-2)
-	return fibCache[n]
+	if result, ok := fibCache.Load(n); ok {
+		return result.(int)
+	}
+	result := FibMemoized(n-1) + FibMemoized(n-2)
+	fibCache.Store(n, result)
+	return result
 }
