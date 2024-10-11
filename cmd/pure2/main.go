@@ -15,7 +15,7 @@ func main() {
 
 	filename := os.Args[1]
 
-	pureFuncDecls, err := purefunction.PureFunctionDecls(filename)
+	pureFuncDecls, err := purefunction.FunctionDecls(filename)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "%v", err)
 		os.Exit(1)
