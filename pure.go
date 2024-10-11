@@ -61,7 +61,7 @@ func PureFunctionDecls(filename string) ([]*ast.FuncDecl, error) {
 	fs := token.NewFileSet()
 	node, err := parser.ParseFile(fs, filename, file, parser.AllErrors)
 	if err != nil {
-		return []*ast.FuncDecl{}, fmt.Errorf("Failed to parse file: %v", err)
+		return []*ast.FuncDecl{}, fmt.Errorf("failed to parse file: %v", err)
 	}
 	var pureFunctions []*ast.FuncDecl
 	for _, decl := range node.Decls {
