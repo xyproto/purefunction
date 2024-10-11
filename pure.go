@@ -8,7 +8,7 @@ import (
 	"os"
 )
 
-// Pure examines if the given function is pure or not. The given funcMap can be nil.
+// Pure examines if the given function is pure or not. No need to pass in existing pure function declarations, it can be skipped.
 func Pure(funcDecl *ast.FuncDecl, existingPureFuncDecls ...*ast.FuncDecl) bool {
 	if funcDecl.Recv != nil { // not a pure function but a method
 		return false
