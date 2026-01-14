@@ -69,6 +69,6 @@ Then make sure `~/go/bin` is in the `PATH` and then:
 
 ### General info
 
-* Version: 1.0.4
+* Version: 1.0.5
 * License: BSD-3
 * Author: Alexander F. Rødseth &lt;xyproto@archlinux.org&gt;
