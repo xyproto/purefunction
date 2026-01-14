@@ -4,7 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"github.com/xyproto/purefunction"
-	"github.com/xyproto/textoutput"
+	"github.com/xyproto/vt"
 	"os"
 	"path/filepath"
 	"sort"
@@ -12,7 +12,7 @@ import (
 )
 
 func main() {
-	o := textoutput.NewTextOutput(true, true)
+	o := vt.NewTextOutput(true, true)
 	flag.Parse()
 	if flag.NArg() == 0 {
 		fmt.Println("Please provide one or more filenames for analysis.")

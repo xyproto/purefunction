@@ -9,7 +9,7 @@ import (
 
 func main() {
 	if len(os.Args) < 2 {
-		fmt.Fprintln(os.Stderr, "Usage: %s <go_source_file>", os.Args[0])
+		fmt.Fprintln(os.Stderr, "Usage: pure2 FILE")
 		os.Exit(1)
 	}
 
