@@ -59,6 +59,14 @@ See issue #1.
 
 * Go 1.10 or later.
 
+### Installation and use of the `pure` utility:
+
+    go install github.com/xyproto/purefunction/cmd/pure@latest
+
+Then make sure `~/go/bin` is in the `PATH` and then:
+
+    pure somefile.go
+
 ### General info
 
 * Version: 1.0.4
