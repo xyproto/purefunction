@@ -2,7 +2,7 @@ package fib
 
 import "sync"
 
-// --- not memoizied ---
+// --- not memoized ---
 
 func Fib(n int) int {
 	if n <= 1 {
@@ -11,7 +11,7 @@ func Fib(n int) int {
 	return Fib(n-1) + Fib(n-2)
 }
 
-// --- memoizied ---
+// --- memoized ---
 
 var fibCache sync.Map
 
