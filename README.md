@@ -55,6 +55,8 @@ ok      github.com/xyproto/purefunction/example 2.798s
 
 See issue #1.
 
+Someone please add automatic memoization of pure functions, with a limited cache size, to the Go compiler. 🙏😄
+
 ### Requirements
 
 * Go 1.10 or later.
